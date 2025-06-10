@@ -9,7 +9,7 @@ fi
 
 /usr/bin/expect <<EOF
 set timeout 65535
-spawn bash ./.local/share/tmoe-linux/git/debian.sh
+spawn bash $HOME/.local/share/tmoe-linux/git/debian.sh
 #tmoe页面
 expect "请使用方向键"
 sleep 1
@@ -37,6 +37,8 @@ send "$1\r"
 #确认安装
 expect "即将为您安装"
 send "\r"
+
+
 #是否新建sudo用户，确定
 expect "请问您是否想要新建"
 sleep 1

@@ -1,6 +1,13 @@
 apt update
-apt upgrade -y
 apt install -y expect
+/usr/bin/expect << EOF
+set timeout 65535
+spawn apt upgrade -y
+#不替换bash.bashrc
+expect "What would you like to do about it"
+send "\r"
+expect eof
+EOF
 curl -LO https://l.tmoe.me/2.awk
 /usr/bin/expect << EOF
 set timeout 65535
@@ -17,54 +24,65 @@ send "Y\r"
 #安装whiptail
 expect "Do you want to install"
 send "Y\r"
-#安装完成，大约5秒后对话框应该能显示出来，然后再输入方向键。立刻输入可能被吞
-#因为匹配不了对话框的字符所以只能以等待5秒作为替代条件了
-expect "Setting up whiptail"
-sleep 5
 #语言选择对话框，按两次下键选择中文然后确定
+expect "language_region"
+sleep 1
 send "\x0e\x0e\r"
 #tmoe对话框，直接确定（选择proot容器），进入初始化
-sleep 5
+expect "请使用方向键"
+sleep 1
 send "\r"
 #安装依赖
 expect "Do you want to"
 send "Y\r"
-expect "Resolving deltas"
+#安装termux-core
+expect "Do you want to continue"
+send "Y\r"
 #安装完毕会回到tmoe对话框，直接确定（选择proot容器），继续初始化
-sleep 20
+expect "请使用方向键"
+sleep 1
 send "\r"
 #颜色选择对话框，无所谓，直接确认（neon）
-sleep 5
+expect "请选择终端配色"
+sleep 1
 send "\r"
 #字体选择对话框，无所谓，直接确认（Inconsolata-go）
-sleep 5
+expect "请选择终端字体"
+sleep 1
 send "\r"
 #是否修改小键盘对话框，无所谓，但我不想修改，按一下右键选no然后回车
-sleep 5
+expect "是否需要创建"
+sleep 1
 send "\x06\r"
 #DNS选择对话框，保持默认直接回车
-sleep 5
+expect "主要用于域名解析"
+sleep 1
 send "\r"
 #“按回车键返回”
 expect "回车键"
 send "\r"
 #是否启用一言，无所谓，但我不想安装，按一下右键选no然后回车
-sleep 5
+expect "是否需要启用一言"
+sleep 1
 send "\x06\r"
 #确认时区Asia/Shanghai，直接回车
-sleep 5
+expect "Is your timezone Asia"
+sleep 1
 send "\r"
 #共享sd，我选择共享整个sd目录（3），按两次下键然后回车
-sleep 5
+expect "否则不建议您挂载整个内置"
+sleep 1
 send "\x0e\x0e\r"
 #是否共享/storage，我选是，直接回车
-sleep 5
+expect "Do you want to share"
+sleep 1
 send "\r"
 #“按回车键返回”
 expect "回车键"
 send "\r"
 #共享HOME，我选择共享整个目录（3），按两次下键然后回车
-sleep 5
+expect "将宿主的主目录挂载至容器内部"
+sleep 1
 send "\x0e\x0e\r"
 #“按回车键返回”
 expect "回车键"
@@ -74,10 +92,12 @@ expect "回车键"
 send "\r"
 #初始化配置完成。现在先不装容器，退出即可完成tmoe安装
 #容器选择界面，按两下右键选cancel然后回车退出
-sleep 5
+expect "您是想要运行"
+sleep 1
 send "\x06\x06\r"
 #tmoe界面，按两下右键选cancel然后回车退出
-sleep 5
+expect "请使用方向键"
+sleep 1
 send "\x06\x06\r"
 expect eof
 EOF
